@@ -1,0 +1,134 @@
+[
+  {
+    "id": "SEC-0001",
+    "timestamp": "2026-09-30T18:42:12Z",
+    "source": "10.24.8.15",
+    "destination": "10.24.1.20",
+    "eventType": "Brute Force",
+    "severity": "Critical",
+    "status": "Open",
+    "protocol": "SSH",
+    "riskScore": 96
+  },
+  {
+    "id": "SEC-0002",
+    "timestamp": "2026-09-30T17:35:42Z",
+    "source": "10.24.8.21",
+    "destination": "10.24.2.14",
+    "eventType": "Port Scan",
+    "severity": "High",
+    "status": "Investigating",
+    "protocol": "TCP",
+    "riskScore": 84
+  },
+  {
+    "id": "SEC-0003",
+    "timestamp": "2026-09-30T16:28:31Z",
+    "source": "172.16.4.33",
+    "destination": "10.24.3.18",
+    "eventType": "Malware",
+    "severity": "Critical",
+    "status": "Open",
+    "protocol": "HTTP",
+    "riskScore": 94
+  },
+  {
+    "id": "SEC-0004",
+    "timestamp": "2026-09-30T15:14:08Z",
+    "source": "192.168.10.44",
+    "destination": "10.24.1.25",
+    "eventType": "Suspicious Login",
+    "severity": "Medium",
+    "status": "Resolved",
+    "protocol": "HTTPS",
+    "riskScore": 58
+  },
+  {
+    "id": "SEC-0005",
+    "timestamp": "2026-09-30T14:06:55Z",
+    "source": "10.15.7.92",
+    "destination": "10.24.5.11",
+    "eventType": "Data Exfiltration",
+    "severity": "Critical",
+    "status": "Investigating",
+    "protocol": "TCP",
+    "riskScore": 98
+  },
+  {
+    "id": "SEC-0006",
+    "timestamp": "2026-09-30T13:21:37Z",
+    "source": "172.18.2.19",
+    "destination": "10.24.2.30",
+    "eventType": "SQL Injection",
+    "severity": "High",
+    "status": "Open",
+    "protocol": "HTTP",
+    "riskScore": 88
+  },
+  {
+    "id": "SEC-0007",
+    "timestamp": "2026-09-30T12:44:19Z",
+    "source": "10.12.4.72",
+    "destination": "10.24.6.18",
+    "eventType": "DDoS",
+    "severity": "Critical",
+    "status": "Investigating",
+    "protocol": "UDP",
+    "riskScore": 91
+  },
+  {
+    "id": "SEC-0008",
+    "timestamp": "2026-09-30T11:37:42Z",
+    "source": "192.168.2.61",
+    "destination": "10.24.4.22",
+    "eventType": "Policy Violation",
+    "severity": "Low",
+    "status": "Resolved",
+    "protocol": "HTTPS",
+    "riskScore": 31
+  },
+  {
+    "id": "SEC-0009",
+    "timestamp": "2026-09-30T10:28:17Z",
+    "source": "10.18.9.41",
+    "destination": "10.24.2.15",
+    "eventType": "Credential Attack",
+    "severity": "High",
+    "status": "Open",
+    "protocol": "SSH",
+    "riskScore": 82
+  },
+  {
+    "id": "SEC-0010",
+    "timestamp": "2026-09-30T09:16:03Z",
+    "source": "172.20.5.81",
+    "destination": "10.24.1.19",
+    "eventType": "Suspicious Login",
+    "severity": "Medium",
+    "status": "Investigating",
+    "protocol": "HTTPS",
+    "riskScore": 64
+  },
+  {
+    "id": "SEC-0011",
+    "timestamp": "2026-09-30T08:43:25Z",
+    "source": "10.22.3.16",
+    "destination": "10.24.5.28",
+    "eventType": "Port Scan",
+    "severity": "High",
+    "status": "Resolved",
+    "protocol": "TCP",
+    "riskScore": 79
+  },
+  {
+    "id": "SEC-0012",
+    "timestamp": "2026-09-30T07:12:44Z",
+    "source": "192.168.15.73",
+    "destination": "10.24.3.12",
+    "eventType": "Malware",
+    "severity": "Critical",
+    "status": "Open",
+    "protocol": "HTTP",
+    "riskScore": 93
+  }
+]
