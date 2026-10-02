@@ -14,50 +14,28 @@ const DEMO_END = new Date(
 
 const IST_TIMEZONE = "Asia/Kolkata";
 
-
 function formatTime(timestamp) {
-  return new Intl.DateTimeFormat(
-    "en-IN",
-    {
-      timeZone: IST_TIMEZONE,
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }
-  ).format(
-    new Date(timestamp)
-  );
+  return new Intl.DateTimeFormat("en-IN", {
+    timeZone: IST_TIMEZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  }).format(new Date(timestamp));
 }
-
 
 function formatDate(timestamp) {
-  return new Intl.DateTimeFormat(
-    "en-IN",
-    {
-      timeZone: IST_TIMEZONE,
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }
-  ).format(
-    new Date(timestamp)
-  );
+  return new Intl.DateTimeFormat("en-IN", {
+    timeZone: IST_TIMEZONE,
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(timestamp));
 }
 
-
-function EventChart({
-  events,
-  range,
-}) {
+function EventChart({ events, range }) {
   let start;
   let bucketSize;
   let bucketCount;
-
-  /*
-  ================================
-  LAST 24 HOURS
-  ================================
-  */
 
   if (range === "24H") {
     start = new Date(
@@ -65,17 +43,9 @@ function EventChart({
         24 * 60 * 60 * 1000
     );
 
-    bucketSize =
-      60 * 60 * 1000;
-
+    bucketSize = 60 * 60 * 1000;
     bucketCount = 24;
   }
-
-  /*
-  ================================
-  LAST 7 DAYS
-  ================================
-  */
 
   if (range === "7D") {
     start = new Date(
@@ -83,17 +53,9 @@ function EventChart({
         7 * 24 * 60 * 60 * 1000
     );
 
-    bucketSize =
-      24 * 60 * 60 * 1000;
-
+    bucketSize = 24 * 60 * 60 * 1000;
     bucketCount = 7;
   }
-
-  /*
-  ================================
-  LAST 30 DAYS
-  ================================
-  */
 
   if (range === "30D") {
     start = new Date(
@@ -101,169 +63,109 @@ function EventChart({
         30 * 24 * 60 * 60 * 1000
     );
 
-    bucketSize =
-      24 * 60 * 60 * 1000;
-
+    bucketSize = 24 * 60 * 60 * 1000;
     bucketCount = 30;
   }
 
-
   /*
-  ================================
-  CREATE GRAPH TIME BUCKETS
-  ================================
-  */
-
+   * Create buckets covering the complete
+   * selected period.
+   */
   const buckets = Array.from(
-    {
-      length: bucketCount,
-    },
-    (_, index) => ({
-      timestamp:
+    { length: bucketCount },
+    (_, index) => {
+      const bucketStart =
         start.getTime() +
-        index * bucketSize,
+        index * bucketSize;
 
-      events: [],
-    })
+      const bucketEnd =
+        bucketStart + bucketSize;
+
+      return {
+        timestamp: bucketStart,
+        bucketEnd,
+        events: [],
+      };
+    }
   );
 
-
   /*
-  ================================
-  PUT ACTUAL EVENTS INTO GRAPH
-  ================================
-
-  IMPORTANT:
-
-  The graph uses event.timestamp
-  directly.
-
-  It does NOT create another
-  timestamp.
-  */
-
+   * Put every event into the bucket that
+   * actually contains its timestamp.
+   */
   events.forEach((event) => {
-    const eventTime =
-      new Date(
-        event.timestamp
-      ).getTime();
+    const eventTime = new Date(
+      event.timestamp
+    ).getTime();
 
     if (
-      eventTime <
-        start.getTime() ||
-      eventTime >
-        DEMO_END.getTime()
+      eventTime < start.getTime() ||
+      eventTime > DEMO_END.getTime()
     ) {
       return;
     }
 
-    const bucketIndex =
-      Math.floor(
-        (eventTime -
-          start.getTime()) /
-          bucketSize
-      );
+    const bucketIndex = Math.floor(
+      (eventTime - start.getTime()) /
+        bucketSize
+    );
 
     if (
       bucketIndex >= 0 &&
-      bucketIndex <
-        buckets.length
+      bucketIndex < buckets.length
     ) {
-      buckets[
-        bucketIndex
-      ].events.push(event);
+      buckets[bucketIndex].events.push(
+        event
+      );
     }
   });
 
-
-  /*
-  ================================
-  FINAL GRAPH DATA
-  ================================
-  */
-
-  const data =
-    buckets.map((bucket) => {
-      const date =
-        new Date(
-          bucket.timestamp
-        );
-
-      return {
-        timestamp:
-          bucket.timestamp,
-
-        label:
-          range === "24H"
-            ? date.toLocaleTimeString(
-                "en-IN",
-                {
-                  timeZone:
-                    IST_TIMEZONE,
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                }
-              )
-            : date.toLocaleDateString(
-                "en-IN",
-                {
-                  timeZone:
-                    IST_TIMEZONE,
-                  day: "2-digit",
-                  month: "short",
-                }
-              ),
-
-        events:
-          bucket.events.length,
-
-        details:
-          bucket.events,
-      };
-    });
-
-
-  /*
-  ================================
-  GRAPH SUMMARY
-  ================================
-  */
-
-  const total =
-    data.reduce(
-      (sum, item) =>
-        sum + item.events,
-      0
+  const data = buckets.map((bucket) => {
+    const date = new Date(
+      bucket.timestamp
     );
 
-  const peak =
-    Math.max(
-      ...data.map(
-        (item) => item.events
-      ),
-      0
-    );
+    return {
+      timestamp: bucket.timestamp,
 
+      label:
+        range === "24H"
+          ? date.toLocaleTimeString(
+              "en-IN",
+              {
+                timeZone: IST_TIMEZONE,
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }
+            )
+          : date.toLocaleDateString(
+              "en-IN",
+              {
+                timeZone: IST_TIMEZONE,
+                day: "2-digit",
+                month: "short",
+              }
+            ),
 
-  /*
-  ================================
-  GRAPH TOOLTIP
-  ================================
+      events: bucket.events.length,
 
-  The tooltip displays the
-  ORIGINAL event timestamp.
+      details: bucket.events,
+    };
+  });
 
-  Therefore:
+  const total = data.reduce(
+    (sum, item) =>
+      sum + item.events,
+    0
+  );
 
-  Table: 14 Sep 2026, 09:59 PM
-
-  Graph tooltip:
-  SEC-0044
-  14 Sep 2026, 09:59 PM
-
-  EXACT MATCH.
-  */
+  const peak = Math.max(
+    ...data.map(
+      (item) => item.events
+    ),
+    0
+  );
 
   function TooltipContent({
     active,
@@ -282,9 +184,7 @@ function EventChart({
 
     return (
       <div className="chart-tooltip">
-
         <div className="tooltip-heading">
-
           <span>
             EVENT ACTIVITY
           </span>
@@ -294,12 +194,9 @@ function EventChart({
               item.timestamp
             )}
           </strong>
-
         </div>
 
-
         <div className="tooltip-count">
-
           <strong>
             {item.events}
           </strong>
@@ -309,21 +206,16 @@ function EventChart({
               ? "event"
               : "events"}
           </span>
-
         </div>
 
-
         <div className="tooltip-list">
-
           {item.details.map(
             (event) => (
               <div
                 className="tooltip-event"
                 key={event.id}
               >
-
                 <div>
-
                   <strong>
                     {event.id}
                   </strong>
@@ -333,39 +225,24 @@ function EventChart({
                       event.timestamp
                     )}
                   </span>
-
                 </div>
 
                 <small>
-                  {event.severity}
-                  {" · "}
+                  {event.severity} ·{" "}
                   {event.eventType}
                 </small>
-
               </div>
             )
           )}
-
         </div>
-
       </div>
     );
   }
 
-
-  /*
-  ================================
-  UI
-  ================================
-  */
-
   return (
     <div className="chart-wrapper">
-
       <div className="chart-meta">
-
         <div>
-
           <span>
             SELECTED PERIOD
           </span>
@@ -377,45 +254,30 @@ function EventChart({
               ? "Last 7 days"
               : "Last 30 days"}
           </strong>
-
         </div>
 
-
         <div>
-
-          <span>
-            EVENTS
-          </span>
+          <span>EVENTS</span>
 
           <strong>
             {total}
           </strong>
-
         </div>
 
-
         <div>
-
-          <span>
-            PEAK
-          </span>
+          <span>PEAK</span>
 
           <strong>
             {peak}
           </strong>
-
         </div>
-
       </div>
 
-
       <div className="chart">
-
         <ResponsiveContainer
           width="100%"
           height={315}
         >
-
           <AreaChart
             data={data}
             margin={{
@@ -425,9 +287,7 @@ function EventChart({
               bottom: 0,
             }}
           >
-
             <defs>
-
               <linearGradient
                 id="eventArea"
                 x1="0"
@@ -435,7 +295,6 @@ function EventChart({
                 x2="0"
                 y2="1"
               >
-
                 <stop
                   offset="0%"
                   stopOpacity={0.28}
@@ -445,18 +304,14 @@ function EventChart({
                   offset="100%"
                   stopOpacity={0.01}
                 />
-
               </linearGradient>
-
             </defs>
-
 
             <CartesianGrid
               vertical={false}
               strokeDasharray="3 4"
               opacity={0.08}
             />
-
 
             <XAxis
               dataKey="label"
@@ -472,7 +327,6 @@ function EventChart({
               }
             />
 
-
             <YAxis
               axisLine={false}
               tickLine={false}
@@ -482,13 +336,11 @@ function EventChart({
               }}
             />
 
-
             <Tooltip
               content={
                 <TooltipContent />
               }
             />
-
 
             <Area
               type="monotone"
@@ -501,32 +353,22 @@ function EventChart({
                 strokeWidth: 2,
               }}
             />
-
           </AreaChart>
-
         </ResponsiveContainer>
-
       </div>
 
-
       <div className="chart-footer">
-
         <span>
-
           <i />
-
           Data synchronized with
           Event Management
-
         </span>
 
         <span>
           Hover over a point to
           inspect events
         </span>
-
       </div>
-
     </div>
   );
 }
