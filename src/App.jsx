@@ -156,21 +156,12 @@ function createISTTimestamp(date) {
 function generateEvents() {
   const events = [];
 
+  // Generate 150 events across the last 30 days
+  // in strictly chronological order.
   for (let i = 0; i < 150; i++) {
-    const offset =
-      eventOffsets[
-        i % eventOffsets.length
-      ];
-
-    const extraMinutes =
-      Math.floor(
-        i / eventOffsets.length
-      ) * 4;
-
     const eventDate = new Date(
       DEMO_END.getTime() -
-        offset * 60 * 60 * 1000 -
-        extraMinutes * 60 * 1000
+        (149 - i) * 4 * 60 * 60 * 1000
     );
 
     const timestamp =
@@ -241,9 +232,13 @@ function generateEvents() {
       }.${10 + (i % 200)}`,
 
       eventType,
+
       severity,
+
       status,
+
       protocol,
+
       riskScore,
     });
   }
