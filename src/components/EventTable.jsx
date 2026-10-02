@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ArrowUpDown, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 function EventTable({ events, onSelect }) {
   const [sortField, setSortField] = useState("timestamp");
@@ -105,10 +106,18 @@ function EventTable({ events, onSelect }) {
           </thead>
 
           <tbody>
-            {visibleEvents.map((event) => (
-              <tr
+            {visibleEvents.map((event, idx) => (
+              <motion.tr
                 key={event.id}
                 onClick={() => onSelect(event)}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                whileHover={{ 
+                  backgroundColor: "rgba(56, 189, 248, 0.08)",
+                  paddingLeft: 8
+                }}
+                className="event-row"
               >
                 <td>
                   <span className="event-id">{event.id}</span>
@@ -162,7 +171,7 @@ function EventTable({ events, onSelect }) {
                 <td>
                   <ChevronRight size={17} className="row-arrow" />
                 </td>
-              </tr>
+              </motion.tr>
             ))}
 
             {visibleEvents.length === 0 && (

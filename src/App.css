@@ -182,3 +182,13 @@
     border-right-color: var(--border);
   }
 }
+.pagination-ellipsis {
+  width: 24px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  color: #52657a;
+  font-size: 10px;
+}
